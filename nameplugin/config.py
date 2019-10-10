@@ -1,2 +1,2 @@
-custom_user_roles = ["test", "role2"]
-custom_admin_roles = ["testadmin", "adminrole2"]
+custom_user_roles = [628688754940575774, 627267658911318056]
+custom_admin_roles = [271701295952297984, 553349134783086592]
