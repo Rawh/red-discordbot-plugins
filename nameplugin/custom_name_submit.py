@@ -3,7 +3,7 @@ from .database import Database
 from .config import custom_user_roles, custom_admin_roles
 import sqlite3
 
-database = Database("custom_name_submit.db")
+database = Database("/data/cogs/CogManager/cogs/nameplugin/custom_name_submit.db")
 
 
 class CustomNameSubmit(commands.Cog):
