@@ -5,6 +5,16 @@ class Database():
     def __init__(self, file_name):
         self._file_name = file_name
 
+    def get_all_games(self):
+        with sqlite3.connect(self._file_name) as connection:
+            cursor = connection.cursor()
+            cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+            raw_games_data = cursor.fetchall()
+            games = []
+            for game in raw_games_data:
+                games.append(game[0])
+            return games
+
     def create_game(self, game):
         with sqlite3.connect(self._file_name) as connection:
             cursor = connection.cursor()
@@ -62,6 +72,12 @@ class Database():
         with sqlite3.connect(self._file_name) as connection:
             cursor = connection.cursor()
             cursor.execute(f'UPDATE {self.sanitize_user_input(game)} SET name=? WHERE id=?', (name, user_id))
+            connection.commit()
+
+    def delete_name(self, game, user_id, name):
+        with sqlite3.connect(self._file_name) as connection:
+            cursor = connection.cursor()
+            cursor.execute(f'DELETE FROM {self.sanitize_user_input(game)} WHERE id=?', (user_id, ))
             connection.commit()
 
     def make_name_available(self, game, name):

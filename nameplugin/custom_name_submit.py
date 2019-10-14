@@ -3,11 +3,13 @@ from .database import Database
 from .config import custom_user_roles, custom_admin_roles
 import sqlite3
 
-database = Database("/data/cogs/CogManager/cogs/nameplugin/custom_name_submit.db")
+database = Database("custom_name_submit.db")
 
 
 class CustomNameSubmit(commands.Cog):
     """Let's users submit names for games."""
+    def __init__(self, bot):
+        self.bot = bot
 
     @commands.command()
     @commands.has_any_role(*custom_user_roles)
@@ -72,8 +74,15 @@ class CustomNameSubmit(commands.Cog):
     async def nameclear(self, ctx, game):
         """Clear(delete) all submitted games."""
         try:
-            database.clear_game_names(game)
-            await ctx.send(f"Cleared all entries for {game}.")
+            bot_msg = await ctx.send(f"{len(database.get_all_entries(game))} entries will be deleted.\nAre you sure?")
+            await bot_msg.add_reaction("✅")
+            await bot_msg.add_reaction("❌")
+            reaction, user = await self.bot.wait_for('reaction_add', check=lambda r, u: u.id == ctx.author.id)
+            if reaction.emoji == "✅":
+                database.clear_game_names(game)
+                await ctx.send(f"Cleared all entries for `{game}`.")
+            elif reaction.emoji == "❌":
+                await ctx.send("Canceled nameclear")
         except sqlite3.OperationalError:
             await ctx.send(f"`{game}` seems to not be available.")
         except Exception as e:
@@ -107,13 +116,27 @@ class CustomNameSubmit(commands.Cog):
     @commands.has_any_role(*custom_admin_roles)
     async def namecreate(self, ctx, game):
         """Create a new game for users to submit their names to."""
-        try:
-            database.create_game(game)
-            await ctx.send(f"Created new game: `{game}`")
-        except sqlite3.OperationalError:
-            await ctx.send(f"`{game}` is not a valid name.")
-        except Exception as e:
-            raise e
+        all_games = database.get_all_games()
+        if database.sanitize_user_input(game) in all_games:
+            await ctx.send(f"`{game}` already exists.")
+        else:
+            try:
+                database.create_game(game)
+                await ctx.send(f"Created new game: `{game}`")
+            except sqlite3.OperationalError:
+                await ctx.send(f"`{game}` is not a valid name.")
+            except Exception as e:
+                raise e
+
+    @commands.command()
+    @commands.has_any_role(*custom_user_roles)
+    async def namelistgames(self, ctx):
+        """Lists all games"""
+        msg = "```\n"
+        for game in database.get_all_games():
+            msg += f"{game} | {len(database.get_all_entries(game))} names submitted\n"
+        msg += "```"
+        await ctx.send(msg)
 
 
 def generate_namelist_messages(list_data):
