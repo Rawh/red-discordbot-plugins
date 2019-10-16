@@ -56,7 +56,8 @@ class nameSubmission(commands.Cog):
 		groups = user.roles
 		allowed = False
 		for group in groups:
-			if group.name.lower() == "name submitter moderator":
+			# if group.name.lower() == "name submitter moderator":
+			if group.name.lower() == "The Nemoderators":
 				allowed = True
 				break
 			
@@ -76,7 +77,8 @@ class nameSubmission(commands.Cog):
 		groups = user.roles
 		allowed = False
 		for group in groups:
-			if group.name.lower() == "name submitter":
+			# if group.name.lower() == "name submitter":
+			if group.name.lower() == "Patron of the Nemo":
 				allowed = True
 				break
 			
