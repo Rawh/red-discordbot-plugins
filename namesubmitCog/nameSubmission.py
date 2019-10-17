@@ -57,7 +57,7 @@ class nameSubmission(commands.Cog):
 		allowed = False
 		for group in groups:
 			# if group.name.lower() == "name submitter moderator":
-			if group.name.lower() == "The Nemoderators":
+			if group.name.lower() == "the nemoderators":
 				allowed = True
 				break
 			
@@ -78,7 +78,7 @@ class nameSubmission(commands.Cog):
 		allowed = False
 		for group in groups:
 			# if group.name.lower() == "name submitter":
-			if group.name.lower() == "Patron of the Nemo":
+			if group.name.lower() == "patron of the nemo":
 				allowed = True
 				break
 			
