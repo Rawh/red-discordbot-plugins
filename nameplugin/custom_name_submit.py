@@ -89,7 +89,7 @@ class CustomNameSubmit(commands.Cog):
             raise e
 
     @commands.command()
-    @commands.has_any_role(*custom_admin_roles)
+    @commands.has_any_role(*custom_user_roles)
     async def namelist(self, ctx, game):
         """List all submitted names for a game."""
         list_data = database.get_all_entries(game)
