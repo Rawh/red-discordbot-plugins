@@ -72,7 +72,7 @@ class CustomNameSubmit(commands.Cog):
     @commands.command()
     @commands.has_any_role(*custom_admin_roles)
     async def nameclear(self, ctx, game):
-        """Clear (delete) all submitted names from the game you specify."""
+        """Delete all submitted names from the game you specify."""
         try:
             bot_msg = await ctx.send(f"{len(database.get_all_entries(game))} entries will be deleted.\nAre you sure?")
             await bot_msg.add_reaction("✅")
