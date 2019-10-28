@@ -1,7 +1,0 @@
-{
-    "author" : ["cactusdude"],
-    "name" : "custom_name_submission",
-    "short" : "Name submission plugin",
-    "description" : "Name submission plugin",
-    "install_msg": "Thanks"
-}
