@@ -1,4 +1,5 @@
 from redbot.core import commands, Config
+import discord
 from .config import custom_user_roles, custom_admin_roles, whitelisted_channels
 import asyncio
 import random
@@ -16,6 +17,8 @@ class GameAlreadyExists(Exception):
 
 def is_whitelisted():
     def predicate(ctx):
+        if isinstance(ctx.channel, discord.DMChannel) or isinstance(ctx.channel, discord.GroupChannel):
+            return True
         if ctx.channel.name in whitelisted_channels:
             return True
         return False
