@@ -12,8 +12,14 @@ class GameAlreadyExists(Exception):
     pass
 
 
-class ChannelNotWhitelisted(commands.CommandError):
-    pass
+# ==== CHECKS ====
+
+def is_whitelisted():
+    def predicate(ctx):
+        if ctx.channel.name in whitelisted_channels:
+            return True
+        return False
+    return commands.check(predicate)
 
 
 class CustomNameSubmit(commands.Cog):
@@ -25,15 +31,6 @@ class CustomNameSubmit(commands.Cog):
             "games": {}
         }
         self.config.register_guild(**config_scheme)
-
-    # ==== CHECKS ====
-
-    def is_whitelisted():
-        def predicate(ctx):
-            if ctx.channel.name in whitelisted_channels:
-                return True
-            raise ChannelNotWhitelisted
-        return commands.check(predicate)
 
     # ==== STORAGE ====
 
@@ -229,7 +226,7 @@ class CustomNameSubmit(commands.Cog):
     async def namesubmit_error(self, ctx, error):
         if isinstance(error, commands.MissingAnyRole):
             await ctx.send("You don't have permission to use this command.")
-        if isinstance(error, ChannelNotWhitelisted):
+        if isinstance(error, commands.CheckFailure):
             await self.not_whitelisted_message(ctx)
 
     @commands.command()
@@ -255,7 +252,7 @@ class CustomNameSubmit(commands.Cog):
     async def namechange_error(self, ctx, error):
         if isinstance(error, commands.MissingAnyRole):
             await ctx.send("You don't have permission to use this command.")
-        if isinstance(error, ChannelNotWhitelisted):
+        if isinstance(error, commands.CheckFailure):
             await self.not_whitelisted_message(ctx)
 
     @commands.command()
@@ -276,7 +273,7 @@ class CustomNameSubmit(commands.Cog):
 
     @namedraw.error
     async def namedraw_error(self, ctx, error):
-        if isinstance(error, ChannelNotWhitelisted):
+        if isinstance(error, commands.CheckFailure):
             await self.not_whitelisted_message(ctx)
 
     @commands.command()
@@ -301,7 +298,7 @@ class CustomNameSubmit(commands.Cog):
 
     @nameclear.error
     async def nameclear_error(self, ctx, error):
-        if isinstance(error, ChannelNotWhitelisted):
+        if isinstance(error, commands.CheckFailure):
             await self.not_whitelisted_message(ctx)
 
     @commands.command()
@@ -319,7 +316,7 @@ class CustomNameSubmit(commands.Cog):
     async def namelist_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
             await ctx.send(f"Command on cooldown. Retry in {int(error.retry_after)} seconds.")
-        if isinstance(error, ChannelNotWhitelisted):
+        if isinstance(error, commands.CheckFailure):
             await self.not_whitelisted_message(ctx)
 
     @commands.command()
@@ -340,7 +337,7 @@ class CustomNameSubmit(commands.Cog):
 
     @namereset.error
     async def namereset_error(self, ctx, error):
-        if isinstance(error, ChannelNotWhitelisted):
+        if isinstance(error, commands.CheckFailure):
             await self.not_whitelisted_message(ctx)
 
     @commands.command()
@@ -358,7 +355,7 @@ class CustomNameSubmit(commands.Cog):
 
     @namelockgame.error
     async def namelockgame_error(self, ctx, error):
-        if isinstance(error, ChannelNotWhitelisted):
+        if isinstance(error, commands.CheckFailure):
             await self.not_whitelisted_message(ctx)
 
     @commands.command()
@@ -376,7 +373,7 @@ class CustomNameSubmit(commands.Cog):
 
     @nameunlockgame.error
     async def nameunlockgame_error(self, ctx, error):
-        if isinstance(error, ChannelNotWhitelisted):
+        if isinstance(error, commands.CheckFailure):
             await self.not_whitelisted_message(ctx)
 
     @commands.command()
@@ -396,7 +393,7 @@ class CustomNameSubmit(commands.Cog):
 
     @namecreate.error
     async def namecreate_error(self, ctx, error):
-        if isinstance(error, ChannelNotWhitelisted):
+        if isinstance(error, commands.CheckFailure):
             await self.not_whitelisted_message(ctx)
 
     @commands.command()
@@ -422,7 +419,7 @@ class CustomNameSubmit(commands.Cog):
 
     @namedeletegame.error
     async def namedeletegame_error(self, ctx, error):
-        if isinstance(error, ChannelNotWhitelisted):
+        if isinstance(error, commands.CheckFailure):
             await self.not_whitelisted_message(ctx)
 
     @commands.command()
@@ -438,7 +435,7 @@ class CustomNameSubmit(commands.Cog):
 
     @namelistgames.error
     async def namelistgames_error(self, ctx, error):
-        if isinstance(error, ChannelNotWhitelisted):
+        if isinstance(error, commands.CheckFailure):
             await self.not_whitelisted_message(ctx)
 
     @commands.command()
@@ -464,7 +461,7 @@ class CustomNameSubmit(commands.Cog):
 
     @nameresetlist.error
     async def nameresetlist_error(self, ctx, error):
-        if isinstance(error, ChannelNotWhitelisted):
+        if isinstance(error, commands.CheckFailure):
             await self.not_whitelisted_message(ctx)
 
     async def not_whitelisted_message(self, ctx):
